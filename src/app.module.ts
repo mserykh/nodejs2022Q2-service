@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { DbModule } from './db/db.module';
 import { UserModule } from './user/user.module';
 import { ArtistModule } from './artist/artist.module';
+import { AlbumModule } from './album/album.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { ArtistModule } from './artist/artist.module';
       isGlobal: true,
     }),
     UserModule,
+    AlbumModule,
     ArtistModule,
     DbModule,
   ],

@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { StatusCodes } from 'http-status-codes';
 
-import { Artist, User } from 'src/db/db.schema';
+import { Artist } from 'src/db/db.schema';
 import { CreateArtistDto, EditArtistDto } from './dto';
 import { ArtistService } from './artist.service';
 

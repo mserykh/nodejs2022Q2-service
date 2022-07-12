@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -24,7 +23,8 @@ export class ArtistService {
     if (!isUUID(id)) throw new BadRequestException(`${id} is invalid`);
 
     const artist = await this.db.artists.findUnique(id);
-    if (!artist) throw new NotFoundException(`Artist with id ${id} does not exist`);
+    if (!artist)
+      throw new NotFoundException(`Artist with id ${id} does not exist`);
 
     const result = { ...artist };
     return result;
@@ -41,7 +41,8 @@ export class ArtistService {
     if (!isUUID(id)) throw new BadRequestException(`${id} is invalid`);
 
     const Artist = await this.db.artists.findUnique(id);
-    if (!Artist) throw new NotFoundException(`Artist with id ${id} does not exist`);
+    if (!Artist)
+      throw new NotFoundException(`Artist with id ${id} does not exist`);
 
     const updateArtist = await this.db.artists.update(id, dto);
     const result = { ...updateArtist };
@@ -53,7 +54,8 @@ export class ArtistService {
     if (!isUUID(id)) throw new BadRequestException(`${id} is invalid`);
 
     const Artist = await this.db.artists.findUnique(id);
-    if (!Artist) throw new NotFoundException(`Artist with id ${id} does not exist`);
+    if (!Artist)
+      throw new NotFoundException(`Artist with id ${id} does not exist`);
 
     const isDeleted = await this.db.artists.delete(id);
     if (!isDeleted)

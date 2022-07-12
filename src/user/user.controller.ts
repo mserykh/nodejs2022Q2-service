@@ -1,17 +1,20 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
   HttpCode,
   Param,
+  Post,
   Put,
+  ValidationPipe,
 } from '@nestjs/common';
 import { STATUS_CODES } from 'http';
 import { StatusCodes } from 'http-status-codes';
 
 import { User } from 'src/db/db.schema';
-import { UpdatePasswordDto } from './dto';
+import { CreateUserDto, UpdatePasswordDto } from './dto';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -21,6 +24,13 @@ export class UserController {
   @Get()
   async getUsers(): Promise<User[]> {
     return await this.userService.getUsers();
+  }
+
+  @Post()
+  async createUser(
+    @Body() dto: CreateUserDto,
+  ) {
+    return await this.userService.createUser(dto);
   }
 
   @Get(':id')
@@ -33,6 +43,7 @@ export class UserController {
     @Param('id') id: string,
     @Body() dto: UpdatePasswordDto,
   ): Promise<User> {
+
     return await this.userService.editUser(id, dto);
   }
 

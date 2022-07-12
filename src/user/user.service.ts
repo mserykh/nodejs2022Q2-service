@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { isUUID } from 'class-validator';
 import { DbService } from 'src/db/db.service';
-import { UpdatePasswordDto } from './dto';
+import { CreateUserDto, UpdatePasswordDto } from './dto';
 
 @Injectable()
 export class UserService {
@@ -17,7 +17,7 @@ export class UserService {
   async getUsers() {
     const users = await this.db.users.findMany();
 
-    const result = { ...users };
+    const result = [...users];
     result.map((user) => delete user.password);
 
     return result;
@@ -31,6 +31,14 @@ export class UserService {
 
     const result = { ...user };
     delete result.password;
+    return result;
+  }
+
+  async createUser(dto: CreateUserDto) {
+    const user = await this.db.users.create(dto);
+    const result = { ...user };
+    delete result.password;
+
     return result;
   }
 

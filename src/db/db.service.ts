@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { UpdatePasswordDto } from 'src/user/dto';
 import { Album, Artist, Favorites, Track, User } from './db.schema';
 
 @Injectable()
@@ -39,6 +40,19 @@ class DbUsers {
   async findUnique(id: string): Promise<User> {
     const user = this.users.find((user) => id === user.id);
     return user;
+  }
+
+  async update(id: string, dto: UpdatePasswordDto) {
+    const index = this.users.findIndex((user) => user.id === id);
+    this.users[index] = {
+      ...this.users[index],
+      password: dto.newPassword,
+      updatedAt: Date.now(),
+      version: this.users[index].version + 1,
+    };
+    const updatedUser = this.users[index];
+
+    return updatedUser;
   }
 }
 

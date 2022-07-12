@@ -13,9 +13,17 @@ export class DbService {
 class DbUsers {
   users: User[] = [
     {
-      login: 'my login',
+      login: 'admin',
       password: 'password',
       id: '1',
+      createdAt: 1657641236708,
+      updatedAt: 1657641236708,
+      version: 1,
+    },
+    {
+      login: 'marie',
+      password: 'secret',
+      id: '2',
       createdAt: 1657641236708,
       updatedAt: 1657641236708,
       version: 1,
@@ -24,7 +32,7 @@ class DbUsers {
 
   constructor() {}
 
-  findMany() {
+  async findMany(): Promise<User[]> {
     return this.users;
   }
 

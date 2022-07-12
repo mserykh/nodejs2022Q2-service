@@ -15,7 +15,7 @@ class DbUsers {
     {
       login: 'admin',
       password: 'password',
-      id: '1',
+      id: '2e1cb7fc-7ce6-4424-b60e-7c546979da5f',
       createdAt: 1657641236708,
       updatedAt: 1657641236708,
       version: 1,
@@ -23,7 +23,7 @@ class DbUsers {
     {
       login: 'marie',
       password: 'secret',
-      id: '2',
+      id: '9f9ff081-863d-4710-a0d2-8c0d95aa994b',
       createdAt: 1657641236708,
       updatedAt: 1657641236708,
       version: 1,

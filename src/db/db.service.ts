@@ -54,6 +54,12 @@ class DbUsers {
 
     return updatedUser;
   }
+
+  async delete(id: string) {
+    const updatedUsers = this.users.filter((user) => user.id !== id);
+    this.users = updatedUsers;
+    return true;
+  }
 }
 
 class DbArtists {

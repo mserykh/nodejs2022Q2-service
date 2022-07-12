@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   ForbiddenException,
-  ImATeapotException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,

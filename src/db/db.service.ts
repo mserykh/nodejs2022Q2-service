@@ -14,26 +14,27 @@ export class DbService {
 }
 
 class DbUsers {
-  users: User[] = [
-    {
-      login: 'admin',
-      password: 'password',
-      id: '2e1cb7fc-7ce6-4424-b60e-7c546979da5f',
-      createdAt: 1657641236708,
-      updatedAt: 1657641236708,
-      version: 1,
-    },
-    {
-      login: 'marie',
-      password: 'secret',
-      id: '9f9ff081-863d-4710-a0d2-8c0d95aa994b',
-      createdAt: 1657641236708,
-      updatedAt: 1657641236708,
-      version: 1,
-    },
-  ];
-
-  constructor() {}
+  users: User[];
+  constructor() {
+    this.users = [
+      {
+        login: 'admin',
+        password: 'password',
+        id: '2e1cb7fc-7ce6-4424-b60e-7c546979da5f',
+        createdAt: 1657641236708,
+        updatedAt: 1657641236708,
+        version: 1,
+      },
+      {
+        login: 'marie',
+        password: 'secret',
+        id: '9f9ff081-863d-4710-a0d2-8c0d95aa994b',
+        createdAt: 1657641236708,
+        updatedAt: 1657641236708,
+        version: 1,
+      },
+    ];
+  }
 
   async findMany(): Promise<User[]> {
     return this.users;
@@ -81,9 +82,11 @@ class DbUsers {
 }
 
 class DbArtists {
-  artists: Artist[] = [];
+  artists: Artist[];
 
-  constructor() {}
+  constructor() {
+    this.artists = [];
+  }
 
   findMany() {
     return this.artists;
@@ -91,9 +94,11 @@ class DbArtists {
 }
 
 class DbTracks {
-  tracks: Track[] = [];
+  tracks: Track[];
 
-  constructor() {}
+  constructor() {
+    this.tracks = [];
+  }
 
   findMany() {
     return this.tracks;
@@ -101,9 +106,11 @@ class DbTracks {
 }
 
 class DbAlbums {
-  albums: Album[] = [];
+  albums: Album[];
 
-  constructor() {}
+  constructor() {
+    this.albums = [];
+  }
 
   findMany() {
     return this.albums;
@@ -111,9 +118,11 @@ class DbAlbums {
 }
 
 class DbFavorites {
-  favorites: Favorites[] = [];
+  favorites: Favorites[];
 
-  constructor() {}
+  constructor() {
+    this.favorites = [];
+  }
 
   findMany() {
     return this.favorites;

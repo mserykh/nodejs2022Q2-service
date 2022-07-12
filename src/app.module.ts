@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 
 import { DbModule } from './db/db.module';
 import { UserModule } from './user/user.module';
+import { ArtistModule } from './artist/artist.module';
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { UserModule } from './user/user.module';
       isGlobal: true,
     }),
     UserModule,
+    ArtistModule,
     DbModule,
   ],
 })

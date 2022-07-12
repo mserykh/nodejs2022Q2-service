@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
+import { CreateArtistDto, EditArtistDto } from 'src/artist/dto';
 
 import { CreateUserDto, UpdatePasswordDto } from 'src/user/dto';
 import { Album, Artist, Favorites, Track, User } from './db.schema';
@@ -90,6 +91,39 @@ class DbArtists {
 
   findMany() {
     return this.artists;
+  }
+
+  async findUnique(id: string): Promise<Artist> {
+    const artist = this.artists.find((artist) => id === artist.id);
+
+    return artist;
+  }
+
+  async create(dto: CreateArtistDto): Promise<Artist> {
+    const artist = {
+      ...dto,
+      id: randomUUID(),
+    };
+
+    this.artists.push(artist);
+    return artist;
+  }
+
+  async update(id: string, dto: EditArtistDto) {
+    const index = this.artists.findIndex((artist) => artist.id === id);
+    this.artists[index] = {
+      ...this.artists[index],
+      ...dto,
+    };
+    const updatedArtist = this.artists[index];
+
+    return updatedArtist;
+  }
+
+  async delete(id: string) {
+    const updatedArtist = this.artists.filter((user) => user.id !== id);
+    this.artists = updatedArtist;
+    return true;
   }
 }
 

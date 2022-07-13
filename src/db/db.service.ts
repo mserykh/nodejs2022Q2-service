@@ -86,6 +86,11 @@ class DbArtists {
         name: 'name',
         grammy: true,
       },
+      {
+        id: '426c8850-1cce-4f47-8128-bd2ddf0cea3a',
+        name: 'new name',
+        grammy: false,
+      },
     ];
   }
 
@@ -121,8 +126,8 @@ class DbArtists {
   }
 
   async delete(id: string) {
-    const updatedArtist = this.artists.filter((artist) => artist.id !== id);
-    this.artists = updatedArtist;
+    const updatedArtists = this.artists.filter((artist) => artist.id !== id);
+    this.artists = updatedArtists;
     return true;
   }
 }
@@ -131,7 +136,15 @@ class DbTracks {
   tracks: Track[];
 
   constructor() {
-    this.tracks = [];
+    this.tracks = [
+      {
+        id: '5765d811-990f-4c5d-8350-317df976d043',
+        name: 'track',
+        artistId: '401a19e8-654d-4bc1-9101-0dd2808da1c1',
+        albumId: '27180c8b-dae9-4c46-9f16-047300fe30a5',
+        duration: 5,
+      },
+    ];
   }
 
   findMany() {
@@ -166,8 +179,8 @@ class DbTracks {
   }
 
   async delete(id: string) {
-    const updatedTrack = this.tracks.filter((track) => track.id !== id);
-    this.tracks = updatedTrack;
+    const updatedTracks = this.tracks.filter((track) => track.id !== id);
+    this.tracks = updatedTracks;
     return true;
   }
 }
@@ -176,7 +189,14 @@ class DbAlbums {
   albums: Album[];
 
   constructor() {
-    this.albums = [];
+    this.albums = [
+      {
+        id: '27180c8b-dae9-4c46-9f16-047300fe30a5',
+        name: 'album',
+        year: 1966,
+        artistId: '401a19e8-654d-4bc1-9101-0dd2808da1c1',
+      },
+    ];
   }
 
   findMany() {
@@ -232,14 +252,25 @@ class DbFavorites {
     return this.favorites;
   }
 
-  async create(favoriteType: string, id: string): Promise<void | Favorites> {
+  doesExist(id: string): boolean {
     const doesExist = Object.values(this.favorites).find((ids: string[]) =>
-    ids.some((i) => i === id),
+      ids.some((i) => i === id),
     );
 
-    if (doesExist) return this.favorites;
+    return doesExist;
+  }
 
+  async create(favoriteType: string, id: string): Promise<void | Favorites> {
     this.favorites[favoriteType].push(id);
+    return this.favorites;
+  }
+
+  async delete(favoriteType: string, id: string): Promise<void | Favorites> {
+    const favorites = this.favorites[favoriteType].filter(
+      (item: string) => item !== id,
+    );
+    this.favorites[favoriteType] = favorites;
+
     return this.favorites;
   }
 }

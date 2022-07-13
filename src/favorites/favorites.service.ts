@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { DbService } from 'src/db/db.service';
 
 @Injectable()
@@ -32,6 +36,12 @@ export class FavoritesService {
   }
 
   async createFavorites(favoriteType: string, id: string) {
+    const doesExist = this.db.favorites.doesExist(id);
+    if (doesExist)
+      throw new NotFoundException(
+        `Favorite ${favoriteType} with id ${id} already added`,
+      );
+
     const favorites = await this.db.favorites.create(favoriteType, id);
 
     if (!favorites)
@@ -57,19 +67,20 @@ export class FavoritesService {
 
     return result;
   }
-  /*
 
-  async deleteFavorites(id: string) {
-    const favorites = await this.db.favorites.findUnique(id);
+  async deleteFavorites(favoriteType: string, id: string) {
+    const favorites = this.db.favorites.doesExist(id);
     if (!favorites)
-      throw new NotFoundException(`Favorites with id ${id} does not exist`);
+      throw new NotFoundException(
+        `Favorite ${favoriteType} with id ${id} was not in Favorites. Unable to delete`,
+      );
 
-    const isDeleted = await this.db.favorites.delete(id);
+    const isDeleted = await this.db.favorites.delete(favoriteType, id);
     if (!isDeleted)
       throw new InternalServerErrorException(
         'Something went wrong. Try again later',
       );
 
     return null;
-  }*/
+  }
 }

@@ -80,7 +80,13 @@ class DbArtists {
   artists: Artist[];
 
   constructor() {
-    this.artists = [];
+    this.artists = [
+      {
+        id: '401a19e8-654d-4bc1-9101-0dd2808da1c1',
+        name: 'name',
+        grammy: true,
+      },
+    ];
   }
 
   findMany() {
@@ -212,13 +218,28 @@ class DbAlbums {
 }
 
 class DbFavorites {
-  favorites: Favorites[];
+  favorites: Favorites;
 
   constructor() {
-    this.favorites = [];
+    this.favorites = {
+      artists: [],
+      albums: [],
+      tracks: [],
+    };
   }
 
   findMany() {
+    return this.favorites;
+  }
+
+  async create(favoriteType: string, id: string): Promise<void | Favorites> {
+    const doesExist = Object.values(this.favorites).find((ids: string[]) =>
+    ids.some((i) => i === id),
+    );
+
+    if (doesExist) return this.favorites;
+
+    this.favorites[favoriteType].push(id);
     return this.favorites;
   }
 }

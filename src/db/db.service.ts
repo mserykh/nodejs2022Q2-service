@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
+
 import { CreateAlbumDto, EditAlbumDto } from 'src/album/dto';
 import { CreateArtistDto, EditArtistDto } from 'src/artist/dto';
-
-import { CreateUserDto, UpdatePasswordDto } from 'src/user/dto';
+import { CreateTrackDto, EditTrackDto } from 'src/track/dto';
+import { UpdatePasswordDto } from 'src/user/dto';
 import { Album, Artist, Favorites, Track, User } from './db.schema';
 
 @Injectable()
@@ -48,20 +49,12 @@ class DbUsers {
     return user;
   }
 
-  async create(dto: CreateUserDto): Promise<User> {
-    const user = {
-      ...dto,
-      id: randomUUID(),
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-      version: 1,
-    };
-
+  async create(user: User): Promise<User> {
     this.users.push(user);
     return user;
   }
 
-  async update(id: string, dto: UpdatePasswordDto) {
+  async update(id: string, dto: UpdatePasswordDto): Promise<User> {
     const index = this.users.findIndex((user) => user.id === id);
 
     this.users[index] = {
@@ -122,7 +115,7 @@ class DbArtists {
   }
 
   async delete(id: string) {
-    const updatedArtist = this.artists.filter((user) => user.id !== id);
+    const updatedArtist = this.artists.filter((artist) => artist.id !== id);
     this.artists = updatedArtist;
     return true;
   }
@@ -137,6 +130,39 @@ class DbTracks {
 
   findMany() {
     return this.tracks;
+  }
+
+  async findUnique(id: string): Promise<Track> {
+    const track = this.tracks.find((track) => id === track.id);
+
+    return track;
+  }
+
+  async create(dto: CreateTrackDto): Promise<Track> {
+    const track = {
+      ...dto,
+      id: randomUUID(),
+    };
+
+    this.tracks.push(track);
+    return track;
+  }
+
+  async update(id: string, dto: EditTrackDto) {
+    const index = this.tracks.findIndex((track) => track.id === id);
+    this.tracks[index] = {
+      ...this.tracks[index],
+      ...dto,
+    };
+    const updatedTrack = this.tracks[index];
+
+    return updatedTrack;
+  }
+
+  async delete(id: string) {
+    const updatedTrack = this.tracks.filter((track) => track.id !== id);
+    this.tracks = updatedTrack;
+    return true;
   }
 }
 
@@ -179,8 +205,8 @@ class DbAlbums {
   }
 
   async delete(id: string) {
-    const updatedArtist = this.albums.filter((user) => user.id !== id);
-    this.albums = updatedArtist;
+    const updatedAlbum = this.albums.filter((album) => album.id !== id);
+    this.albums = updatedAlbum;
     return true;
   }
 }

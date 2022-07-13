@@ -5,9 +5,13 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { isUUID } from 'class-validator';
+import { randomUUID } from 'crypto';
+
 import { DbService } from 'src/db/db.service';
 import { CreateUserDto, UpdatePasswordDto } from './dto';
+import { UserEntity } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -15,9 +19,7 @@ export class UserService {
 
   async getUsers() {
     const users = await this.db.users.findMany();
-
-    const result = [...users];
-    result.map((user) => delete user.password);
+    const result = users.map((user) => plainToInstance(UserEntity, user));
 
     return result;
   }
@@ -28,15 +30,23 @@ export class UserService {
     const user = await this.db.users.findUnique(id);
     if (!user) throw new NotFoundException(`User with id ${id} does not exist`);
 
-    const result = { ...user };
-    delete result.password;
+    const result = plainToInstance(UserEntity, user);
+
     return result;
   }
 
   async createUser(dto: CreateUserDto) {
-    const user = await this.db.users.create(dto);
-    const result = { ...user };
-    delete result.password;
+    const newUser = new UserEntity();
+
+    newUser.id = randomUUID();
+    newUser.login = dto.login;
+    newUser.password = dto.password;
+    newUser.createdAt = Date.now();
+    newUser.updatedAt = Date.now();
+    newUser.version = 1;
+
+    const user = await this.db.users.create(newUser);
+    const result = plainToInstance(UserEntity, user);
 
     return result;
   }
@@ -53,8 +63,7 @@ export class UserService {
       );
 
     const updateUser = await this.db.users.update(id, dto);
-    const result = { ...updateUser };
-    delete result.password;
+    const result = plainToInstance(UserEntity, updateUser);
 
     return result;
   }

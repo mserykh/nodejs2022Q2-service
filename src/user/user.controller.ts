@@ -19,7 +19,7 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @Get()
-  async getUsers(): Promise<User[]> {
+  async getUsers(): Promise<Partial<User>[]> {
     return await this.userService.getUsers();
   }
 

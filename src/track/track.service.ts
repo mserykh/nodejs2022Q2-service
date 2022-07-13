@@ -1,0 +1,68 @@
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
+import { isUUID } from 'class-validator';
+import { DbService } from 'src/db/db.service';
+import { CreateTrackDto, EditTrackDto } from './dto';
+
+@Injectable()
+export class TrackService {
+  constructor(private db: DbService) {}
+
+  async getTracks() {
+    const tracks = await this.db.tracks.findMany();
+    const result = [...tracks];
+
+    return result;
+  }
+
+  async getTrackById(id: string) {
+    if (!isUUID(id)) throw new BadRequestException(`${id} is invalid`);
+
+    const track = await this.db.tracks.findUnique(id);
+    if (!track)
+      throw new NotFoundException(`Track with id ${id} does not exist`);
+
+    const result = { ...track };
+    return result;
+  }
+
+  async createTrack(dto: CreateTrackDto) {
+    const track = await this.db.tracks.create(dto);
+    const result = { ...track };
+
+    return result;
+  }
+
+  async editTrack(id: string, dto: EditTrackDto) {
+    if (!isUUID(id)) throw new BadRequestException(`${id} is invalid`);
+
+    const track = await this.db.tracks.findUnique(id);
+    if (!track)
+      throw new NotFoundException(`Track with id ${id} does not exist`);
+
+    const updateTrack = await this.db.tracks.update(id, dto);
+    const result = { ...updateTrack };
+
+    return result;
+  }
+
+  async deleteTrack(id: string) {
+    if (!isUUID(id)) throw new BadRequestException(`${id} is invalid`);
+
+    const track = await this.db.tracks.findUnique(id);
+    if (!track)
+      throw new NotFoundException(`Track with id ${id} does not exist`);
+
+    const isDeleted = await this.db.tracks.delete(id);
+    if (!isDeleted)
+      throw new InternalServerErrorException(
+        'Something went wrong. Try again later',
+      );
+
+    return null;
+  }
+}

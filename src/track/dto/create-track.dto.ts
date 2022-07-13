@@ -12,7 +12,7 @@ export class CreateTrackDto {
   @IsString()
   @ValidateIf((_, value) => value !== null)
   albumId: string | null;
-  
+
   @IsNumber()
   @IsNotEmpty()
   duration: number;

@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -29,7 +30,7 @@ export class UserController {
   }
 
   @Get(':id')
-  async getUserById(@Param('id') id: string): Promise<User> {
+  async getUserById(@Param('id', new ParseUUIDPipe()) id: string): Promise<User> {
     return await this.userService.getUserById(id);
   }
 

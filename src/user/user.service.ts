@@ -25,8 +25,6 @@ export class UserService {
   }
 
   async getUserById(id: string) {
-    if (!isUUID(id)) throw new BadRequestException(`${id} is invalid`);
-
     const user = await this.db.users.findUnique(id);
     if (!user) throw new NotFoundException(`User with id ${id} does not exist`);
 
@@ -52,8 +50,6 @@ export class UserService {
   }
 
   async editUser(id: string, dto: UpdatePasswordDto) {
-    if (!isUUID(id)) throw new BadRequestException(`${id} is invalid`);
-
     const user = await this.db.users.findUnique(id);
     if (!user) throw new NotFoundException(`User with id ${id} does not exist`);
 
@@ -69,8 +65,6 @@ export class UserService {
   }
 
   async deleteUser(id: string) {
-    if (!isUUID(id)) throw new BadRequestException(`${id} is invalid`);
-
     const user = await this.db.users.findUnique(id);
     if (!user) throw new NotFoundException(`User with id ${id} does not exist`);
 

@@ -20,8 +20,6 @@ export class AlbumService {
   }
 
   async getAlbumById(id: string) {
-    if (!isUUID(id)) throw new BadRequestException(`${id} is invalid`);
-
     const album = await this.db.albums.findUnique(id);
     if (!album)
       throw new NotFoundException(`Album with id ${id} does not exist`);
@@ -38,8 +36,6 @@ export class AlbumService {
   }
 
   async editAlbum(id: string, dto: EditAlbumDto) {
-    if (!isUUID(id)) throw new BadRequestException(`${id} is invalid`);
-
     const album = await this.db.albums.findUnique(id);
     if (!album)
       throw new NotFoundException(`Album with id ${id} does not exist`);
@@ -51,8 +47,6 @@ export class AlbumService {
   }
 
   async deleteAlbum(id: string) {
-    if (!isUUID(id)) throw new BadRequestException(`${id} is invalid`);
-
     const album = await this.db.albums.findUnique(id);
     if (!album)
       throw new NotFoundException(`Album with id ${id} does not exist`);

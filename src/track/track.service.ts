@@ -20,8 +20,6 @@ export class TrackService {
   }
 
   async getTrackById(id: string) {
-    if (!isUUID(id)) throw new BadRequestException(`${id} is invalid`);
-
     const track = await this.db.tracks.findUnique(id);
     if (!track)
       throw new NotFoundException(`Track with id ${id} does not exist`);
@@ -38,8 +36,6 @@ export class TrackService {
   }
 
   async editTrack(id: string, dto: EditTrackDto) {
-    if (!isUUID(id)) throw new BadRequestException(`${id} is invalid`);
-
     const track = await this.db.tracks.findUnique(id);
     if (!track)
       throw new NotFoundException(`Track with id ${id} does not exist`);
@@ -51,8 +47,6 @@ export class TrackService {
   }
 
   async deleteTrack(id: string) {
-    if (!isUUID(id)) throw new BadRequestException(`${id} is invalid`);
-
     const track = await this.db.tracks.findUnique(id);
     if (!track)
       throw new NotFoundException(`Track with id ${id} does not exist`);

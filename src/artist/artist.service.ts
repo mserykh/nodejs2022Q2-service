@@ -20,8 +20,6 @@ export class ArtistService {
   }
 
   async getArtistById(id: string) {
-    if (!isUUID(id)) throw new BadRequestException(`${id} is invalid`);
-
     const artist = await this.db.artists.findUnique(id);
     if (!artist)
       throw new NotFoundException(`Artist with id ${id} does not exist`);
@@ -38,8 +36,6 @@ export class ArtistService {
   }
 
   async editArtist(id: string, dto: EditArtistDto) {
-    if (!isUUID(id)) throw new BadRequestException(`${id} is invalid`);
-
     const Artist = await this.db.artists.findUnique(id);
     if (!Artist)
       throw new NotFoundException(`Artist with id ${id} does not exist`);
@@ -51,8 +47,6 @@ export class ArtistService {
   }
 
   async deleteArtist(id: string) {
-    if (!isUUID(id)) throw new BadRequestException(`${id} is invalid`);
-
     const Artist = await this.db.artists.findUnique(id);
     if (!Artist)
       throw new NotFoundException(`Artist with id ${id} does not exist`);

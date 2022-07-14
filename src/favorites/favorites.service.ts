@@ -2,6 +2,7 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { DbService } from 'src/db/db.service';
 
@@ -36,8 +37,15 @@ export class FavoritesService {
   }
 
   async createFavorites(favoriteType: string, id: string) {
-    const doesExist = this.db.favorites.doesExist(id);
-    if (doesExist)
+    const doesExist = await this.db[favoriteType].findUnique(id);
+
+    if (!doesExist)
+      throw new UnprocessableEntityException(
+        `${favoriteType} with ${id} does not exist`,
+      );
+
+    const isFavorite = this.db.favorites.isFavorite(id);
+    if (isFavorite)
       throw new NotFoundException(
         `Favorite ${favoriteType} with id ${id} already added`,
       );
@@ -69,7 +77,14 @@ export class FavoritesService {
   }
 
   async deleteFavorites(favoriteType: string, id: string) {
-    const favorites = this.db.favorites.doesExist(id);
+    const doesExist = await this.db[favoriteType].findUnique(id);
+
+    if (!doesExist)
+      throw new UnprocessableEntityException(
+        `${favoriteType} with ${id} does not exist`,
+      );
+
+    const favorites = this.db.favorites.isFavorite(id);
     if (!favorites)
       throw new NotFoundException(
         `Favorite ${favoriteType} with id ${id} was not in Favorites. Unable to delete`,

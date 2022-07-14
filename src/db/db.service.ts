@@ -203,7 +203,7 @@ class DbAlbums {
     return this.albums;
   }
 
-  async findUnique(id: string): Promise<Album> {
+  async findUnique(id: string) {
     const album = this.albums.find((album) => id === album.id);
 
     return album;
@@ -252,12 +252,12 @@ class DbFavorites {
     return this.favorites;
   }
 
-  doesExist(id: string): boolean {
-    const doesExist = Object.values(this.favorites).find((ids: string[]) =>
+  isFavorite(id: string): boolean {
+    const isFavorite = Object.values(this.favorites).find((ids: string[]) =>
       ids.some((i) => i === id),
     );
 
-    return doesExist;
+    return isFavorite;
   }
 
   async create(favoriteType: string, id: string): Promise<void | Favorites> {
@@ -266,10 +266,11 @@ class DbFavorites {
   }
 
   async delete(favoriteType: string, id: string): Promise<void | Favorites> {
-    const favorites = this.favorites[favoriteType].filter(
-      (item: string) => item !== id,
-    );
-    this.favorites[favoriteType] = favorites;
+    const favorites = this.favorites[favoriteType] as string[];
+    const result = favorites.filter((itemId) => itemId !== id);
+
+    this.favorites[favoriteType] = [];
+    this.favorites[favoriteType] = [...result];
 
     return this.favorites;
   }

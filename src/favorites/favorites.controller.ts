@@ -19,7 +19,9 @@ export class FavoritesController {
 
   @Get()
   async getFavorites(): Promise<FavoritesRepsonse> {
-    return await this.favoritesService.getFavorites();
+    const result = await this.favoritesService.getFavorites();
+
+    return result;
   }
 
   @Post('artist/:id')

@@ -8,6 +8,7 @@ import {
   ParseUUIDPipe,
   Post,
 } from '@nestjs/common';
+import { StatusCodes } from 'http-status-codes';
 
 import { FavoritesRepsonse } from './entities/favorites.entity';
 import { FavoritesService } from './favorites.service';
@@ -33,12 +34,12 @@ export class FavoritesController {
     );
     return result;
   }
-  /*
+  
   @HttpCode(StatusCodes.NO_CONTENT)
   @Delete('track/:id')
   async deleteFavoritesTrack(
     @Param('id', new ParseUUIDPipe()) id: string,
   ): Promise<void> {
-    return await this.favoritesService.deleteFavorites(id);
-  }*/
+    /*return await this.favoritesService.deleteFavorites(id);*/
+  }
 }

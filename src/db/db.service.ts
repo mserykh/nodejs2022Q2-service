@@ -128,6 +128,7 @@ class DbArtists {
   async delete(id: string) {
     const updatedArtists = this.artists.filter((artist) => artist.id !== id);
     this.artists = updatedArtists;
+
     return true;
   }
 }

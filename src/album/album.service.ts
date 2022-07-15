@@ -45,6 +45,12 @@ export class AlbumService {
     return result;
   }
 
+  deleteRef(id: string) {
+    this.db.tracks.tracks.forEach((item) => {
+      if (item.albumId === id) item.albumId = null;
+    });
+  }
+
   async deleteAlbum(id: string) {
     const album = await this.db.albums.findUnique(id);
     if (!album)
@@ -52,6 +58,8 @@ export class AlbumService {
 
     const isFavorite = this.db.favorites.isFavorite(id);
     if (isFavorite) await this.db.favorites.delete(FavoriteItemType.album, id);
+
+    this.deleteRef(id);
 
     const isDeleted = await this.db.albums.delete(id);
     if (!isDeleted)

@@ -1,10 +1,8 @@
 import {
-  BadRequestException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { isUUID } from 'class-validator';
 import { DbService } from 'src/db/db.service';
 import { FavoriteItemType } from 'src/favorites/favorites.types';
 import { CreateTrackDto, EditTrackDto } from './dto';

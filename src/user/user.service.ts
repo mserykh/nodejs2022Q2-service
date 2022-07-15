@@ -1,12 +1,10 @@
 import {
-  BadRequestException,
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import { isUUID } from 'class-validator';
 import { randomUUID } from 'crypto';
 
 import { DbService } from 'src/db/db.service';

@@ -30,7 +30,9 @@ export class UserController {
   }
 
   @Get(':id')
-  async getUserById(@Param('id', new ParseUUIDPipe()) id: string): Promise<User> {
+  async getUserById(
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<User> {
     return await this.userService.getUserById(id);
   }
 

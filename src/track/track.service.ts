@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { isUUID } from 'class-validator';
 import { DbService } from 'src/db/db.service';
+import { FavoriteItemType } from 'src/favorites/favorites.types';
 import { CreateTrackDto, EditTrackDto } from './dto';
 
 @Injectable()
@@ -50,6 +51,9 @@ export class TrackService {
     const track = await this.db.tracks.findUnique(id);
     if (!track)
       throw new NotFoundException(`Track with id ${id} does not exist`);
+
+    const isFavorite = this.db.favorites.isFavorite(id);
+    if (isFavorite) await this.db.favorites.delete(FavoriteItemType.track, id);
 
     const isDeleted = await this.db.tracks.delete(id);
     if (!isDeleted)

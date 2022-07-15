@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { isUUID } from 'class-validator';
 import { DbService } from 'src/db/db.service';
+import { FavoriteItemType } from 'src/favorites/favorites.types';
 import { CreateAlbumDto, EditAlbumDto } from './dto';
 
 @Injectable()
@@ -50,6 +51,9 @@ export class AlbumService {
     const album = await this.db.albums.findUnique(id);
     if (!album)
       throw new NotFoundException(`Album with id ${id} does not exist`);
+
+    const isFavorite = this.db.favorites.isFavorite(id);
+    if (isFavorite) await this.db.favorites.delete(FavoriteItemType.album, id);
 
     const isDeleted = await this.db.albums.delete(id);
     if (!isDeleted)

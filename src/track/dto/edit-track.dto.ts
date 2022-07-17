@@ -3,27 +3,26 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsUUID,
   ValidateIf,
 } from 'class-validator';
 
 export class EditTrackDto {
   @IsString()
-  @IsOptional()
   @IsNotEmpty()
   name: string;
 
-  @IsString()
+  @IsUUID('4')
   @IsOptional()
   @ValidateIf((_, value) => value !== null)
   artistId: string | null;
 
-  @IsString()
+  @IsUUID('4')
   @IsOptional()
   @ValidateIf((_, value) => value !== null)
   albumId: string | null;
 
   @IsNumber()
-  @IsOptional()
   @IsNotEmpty()
   duration: number;
 }

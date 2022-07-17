@@ -161,6 +161,8 @@ class DbTracks {
   async create(dto: CreateTrackDto): Promise<Track> {
     const track = {
       ...dto,
+      artistId: dto.artistId ? dto.artistId : null,
+      albumId: dto.albumId ? dto.albumId : null,
       id: randomUUID(),
     };
 
@@ -213,6 +215,7 @@ class DbAlbums {
   async create(dto: CreateAlbumDto): Promise<Album> {
     const album = {
       ...dto,
+      artistId: dto.artistId ? dto.artistId : null,
       id: randomUUID(),
     };
 

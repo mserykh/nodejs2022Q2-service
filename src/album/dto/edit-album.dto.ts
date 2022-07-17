@@ -3,22 +3,21 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsUUID,
   ValidateIf,
 } from 'class-validator';
 
 export class EditAlbumDto {
   @IsString()
-  @IsOptional()
   @IsNotEmpty()
   name: string;
 
   @IsNumber()
-  @IsOptional()
   @IsNotEmpty()
   year: number;
 
-  @IsString()
+  @IsUUID('4')
   @IsOptional()
-  @ValidateIf((object, value) => value !== null)
+  @ValidateIf((_, value) => value !== null)
   artistId: string | null;
 }

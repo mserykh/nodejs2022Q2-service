@@ -12,10 +12,10 @@ Home Library Service is REST API offering Create, Read, Update, and Delete (CRUD
 - Clone this repository
 
 ```
-git clone {repository URL}
+git clone {repository}
 ```
 
-- Go to nodejs2022Q2-service
+- Go to `nodejs2022Q2-service`
 
 ```
 cd nodejs2022Q2-service

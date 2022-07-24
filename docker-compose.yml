@@ -1,0 +1,13 @@
+version: '3.9'
+services:
+  app:
+    build: .
+    ports:
+      - '${PORT}:${PORT}'
+    volumes:
+      - ./:/usr/app
+      - /usr/app/node_modules
+    ## environment:
+    
+  postgress:
+    build: ./db/

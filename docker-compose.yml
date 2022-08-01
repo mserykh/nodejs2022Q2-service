@@ -2,6 +2,7 @@ version: '3.9'
 services:
   app:
     build: .
+    restart: always
     ports:
       - '${PORT}:${PORT}'
     volumes:
@@ -9,5 +10,19 @@ services:
       - /usr/app/node_modules
     ## environment:
     
-  postgress:
+  postgres:
+    image: postgres
     build: ./db/
+    restart: always
+    ports: 
+      - 5435:'${POSTGRES_PORT}'
+    environment:
+      - POSTGRES_USER='${POSTGRES_USER}'
+      - POSTGRES_PASSWORD='${POSTGRES_PASSWORD}'
+      - POSTGRES_DB='${POSTGRES_DB}'
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres:/var/lib/postgresql/data/pgdata
+    networks:
+       - postgres
+

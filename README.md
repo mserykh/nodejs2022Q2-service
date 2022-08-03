@@ -6,6 +6,7 @@ Home Library Service is REST API offering Create, Read, Update, and Delete (CRUD
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
 - Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
+- Docker - [Download & Install Docker](https://www.docker.com/get-started/).
 
 ## Installation
 
@@ -27,8 +28,6 @@ cd nodejs2022Q2-service
 npm install
 ```
 
-- Rename the file `.env.example` to `.env`
-
 - Start application in production mode
 
 ```
@@ -37,6 +36,36 @@ npm run start:prod
 
 - After starting the app on port (4000 as default) you can open
   in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
+
+### Run App with Docker
+
+```
+docker-compose up
+```
+
+### Download Docker Images
+
+[See on Docker hub](https://hub.docker.com/repository/docker/marieserykh/nodejs2022q2_service)
+
+```
+docker pull marieserykh/nodejs2022q2_service:app
+```
+
+```
+docker pull marieserykh/nodejs2022q2_service:postgres
+```
+
+
+### Vulnarability scanning
+
+```
+npm run scan:app
+```
+
+```
+npm run scan:db
+```
+
 
 ## Usage
 

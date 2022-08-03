@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { StatusCodes } from 'http-status-codes';
 
-import { User } from 'src/db/db.schema';
 import { CreateUserDto, UpdatePasswordDto } from './dto';
 import { UserService } from './user.service';
 
@@ -20,7 +19,7 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @Get()
-  async getUsers(): Promise<Partial<User>[]> {
+  async getUsers() {
     const result = await this.userService.getUsers();
     return result;
   }
@@ -32,9 +31,7 @@ export class UserController {
   }
 
   @Get(':id')
-  async getUserById(
-    @Param('id', new ParseUUIDPipe()) id: string,
-  ): Promise<User> {
+  async getUserById(@Param('id', new ParseUUIDPipe()) id: string) {
     const result = await this.userService.getUserById(id);
     return result;
   }
@@ -43,16 +40,14 @@ export class UserController {
   async editUser(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() dto: UpdatePasswordDto,
-  ): Promise<User> {
+  ) {
     const result = await this.userService.editUser(id, dto);
     return result;
   }
 
   @HttpCode(StatusCodes.NO_CONTENT)
   @Delete(':id')
-  async deleteUser(
-    @Param('id', new ParseUUIDPipe()) id: string,
-  ): Promise<void> {
+  async deleteUser(@Param('id', new ParseUUIDPipe()) id: string) {
     const result = this.userService.deleteUser(id);
     return result;
   }

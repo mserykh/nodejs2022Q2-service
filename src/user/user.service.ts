@@ -9,7 +9,7 @@ import { randomUUID } from 'crypto';
 
 import { DbService } from 'src/db/db.service';
 import { CreateUserDto, UpdatePasswordDto } from './dto';
-import { UserEntity } from './entities/user.entity';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -17,7 +17,7 @@ export class UserService {
 
   async getUsers() {
     const users = await this.db.users.findMany();
-    const result = users.map((user) => plainToInstance(UserEntity, user));
+    const result = users.map((user) => plainToInstance(User, user));
 
     return result;
   }
@@ -26,13 +26,13 @@ export class UserService {
     const user = await this.db.users.findUnique(id);
     if (!user) throw new NotFoundException(`User with id ${id} does not exist`);
 
-    const result = plainToInstance(UserEntity, user);
+    const result = plainToInstance(User, user);
 
     return result;
   }
 
   async createUser(dto: CreateUserDto) {
-    const newUser = new UserEntity();
+    const newUser = new User();
 
     newUser.id = randomUUID();
     newUser.login = dto.login;
@@ -42,7 +42,7 @@ export class UserService {
     newUser.version = 1;
 
     const user = await this.db.users.create(newUser);
-    const result = plainToInstance(UserEntity, user);
+    const result = plainToInstance(User, user);
 
     return result;
   }
@@ -57,7 +57,7 @@ export class UserService {
       );
 
     const updateUser = await this.db.users.update(id, dto);
-    const result = plainToInstance(UserEntity, updateUser);
+    const result = plainToInstance(User, updateUser);
 
     return result;
   }

@@ -39,7 +39,7 @@ export class FavoritesService {
   async addAlbumToFavorites(id: string) {
     const album = await this.albumsRepository.findOneBy({ id });
 
-    if (!album) throw new NotFoundException(`Album with ${id} does not exist`);
+    if (!album) throw new UnprocessableEntityException(`Album with ${id} does not exist`);
 
     const isFavorite = await this.favoritesRepository
       .createQueryBuilder('favorites')
@@ -72,7 +72,7 @@ export class FavoritesService {
       .getOne();
 
     if (!isFavorite)
-      throw new NotFoundException(
+      throw new UnprocessableEntityException(
         `Favorite artist with id ${id} was not in Favorites. Unable to delete`,
       );
 
@@ -87,7 +87,7 @@ export class FavoritesService {
     const artist = await this.artistsRepository.findOneBy({ id });
 
     if (!artist)
-      throw new NotFoundException(`Artist with ${id} does not exist`);
+      throw new UnprocessableEntityException(`Artist with ${id} does not exist`);
 
     const isFavorite = await this.favoritesRepository
       .createQueryBuilder('favorites')
@@ -125,7 +125,7 @@ export class FavoritesService {
     });
 
     if (!isFavorite)
-      throw new NotFoundException(
+      throw new UnprocessableEntityException(
         `Favorite artist with id ${id} was not in Favorites. Unable to delete`,
       );
 
@@ -139,7 +139,7 @@ export class FavoritesService {
   async addTrackToFavorites(id: string) {
     const track = await this.tracksRepository.findOneBy({ id });
 
-    if (!track) throw new NotFoundException(`Track with ${id} does not exist`);
+    if (!track) throw new UnprocessableEntityException(`Track with ${id} does not exist`);
 
     const isFavorite = await this.favoritesRepository
       .createQueryBuilder('favorites')
@@ -175,7 +175,7 @@ export class FavoritesService {
     });
 
     if (!isFavorite)
-      throw new NotFoundException(
+      throw new UnprocessableEntityException(
         `Favorite track with id ${id} was not in Favorites. Unable to delete`,
       );
 

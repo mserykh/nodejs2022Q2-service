@@ -3,69 +3,71 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { DbService } from 'src/db/db.service';
 import { FavoriteItemType } from 'src/favorites/favorites.types';
+import { Repository } from 'typeorm';
 import { CreateAlbumDto, EditAlbumDto } from './dto';
+import { AlbumEntity } from './entities/album.entity';
 
 @Injectable()
 export class AlbumService {
-  constructor(private db: DbService) {}
+  constructor(
+    @InjectRepository(AlbumEntity)
+    private albumsRepository: Repository<AlbumEntity>,
+  ) {}
 
   async getAlbums() {
-    const albums = await this.db.albums.findMany();
-    const result = [...albums];
+    const albums = await this.albumsRepository.find();
 
-    return result;
+    return albums;
   }
 
   async getAlbumById(id: string) {
-    const album = await this.db.albums.findUnique(id);
-    if (!album)
-      throw new NotFoundException(`Album with id ${id} does not exist`);
+    const album = await this.albumsRepository.findOneBy({ id });
+    // if (!album)
+    //   throw new NotFoundException(`Album with id ${id} does not exist`);
 
-    const result = { ...album };
-    return result;
+    // const result = { ...album };
+    return album;
   }
 
   async createAlbum(dto: CreateAlbumDto) {
-    const album = await this.db.albums.create(dto);
-    const result = { ...album };
+    const album = this.albumsRepository.create(dto);
 
-    return result;
+    return this.albumsRepository.save(album);
   }
 
   async editAlbum(id: string, dto: EditAlbumDto) {
-    const album = await this.db.albums.findUnique(id);
-    if (!album)
-      throw new NotFoundException(`Album with id ${id} does not exist`);
+    // const album = await this.db.albums.findUnique(id);
+    // if (!album)
+    //   throw new NotFoundException(`Album with id ${id} does not exist`);
+    await this.albumsRepository.update(id, dto);
 
-    const updateAlbum = await this.db.albums.update(id, dto);
-    const result = { ...updateAlbum };
-
-    return result;
+    return this.getAlbumById(id);
   }
 
-  deleteRef(id: string) {
-    this.db.tracks.tracks.forEach((item) => {
-      if (item.albumId === id) item.albumId = null;
-    });
-  }
+  // deleteRef(id: string) {
+  //   this.db.tracks.tracks.forEach((item) => {
+  //     if (item.albumId === id) item.albumId = null;
+  //   });
+  // }
 
   async deleteAlbum(id: string) {
-    const album = await this.db.albums.findUnique(id);
-    if (!album)
-      throw new NotFoundException(`Album with id ${id} does not exist`);
+    // const album = await this.db.albums.findUnique(id);
+    // if (!album)
+    //   throw new NotFoundException(`Album with id ${id} does not exist`);
 
-    const isFavorite = this.db.favorites.isFavorite(id);
-    if (isFavorite) await this.db.favorites.delete(FavoriteItemType.album, id);
+    // const isFavorite = this.db.favorites.isFavorite(id);
+    // if (isFavorite) await this.db.favorites.delete(FavoriteItemType.album, id);
 
-    this.deleteRef(id);
+    // this.deleteRef(id);
 
-    const isDeleted = await this.db.albums.delete(id);
-    if (!isDeleted)
-      throw new InternalServerErrorException(
-        'Something went wrong. Try again later',
-      );
+    await this.albumsRepository.delete({ id });
+    // if (!isDeleted)
+    //   throw new InternalServerErrorException(
+    //     'Something went wrong. Try again later',
+    //   );
 
     return null;
   }

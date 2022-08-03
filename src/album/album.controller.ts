@@ -20,7 +20,7 @@ export class AlbumController {
   constructor(private albumService: AlbumService) {}
 
   @Get()
-  async getAlbums(): Promise<Album[]> {
+  async getAlbums() {
     return await this.albumService.getAlbums();
   }
 
@@ -30,9 +30,7 @@ export class AlbumController {
   }
 
   @Get(':id')
-  async getAlbumById(
-    @Param('id', new ParseUUIDPipe()) id: string,
-  ): Promise<Album> {
+  async getAlbumById(@Param('id', new ParseUUIDPipe()) id: string) {
     return await this.albumService.getAlbumById(id);
   }
 
@@ -40,15 +38,13 @@ export class AlbumController {
   async editAlbum(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() dto: EditAlbumDto,
-  ): Promise<Album> {
+  ) {
     return await this.albumService.editAlbum(id, dto);
   }
 
   @HttpCode(StatusCodes.NO_CONTENT)
   @Delete(':id')
-  async deleteAlbum(
-    @Param('id', new ParseUUIDPipe()) id: string,
-  ): Promise<void> {
+  async deleteAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
     return await this.albumService.deleteAlbum(id);
   }
 }

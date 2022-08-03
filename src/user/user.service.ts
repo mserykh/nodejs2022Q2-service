@@ -32,15 +32,6 @@ export class UserService {
   }
 
   async createUser(dto: CreateUserDto) {
-    // const newUser = new User();
-
-    // newUser.id = randomUUID();
-    // newUser.login = dto.login;
-    // newUser.password = dto.password;
-    // newUser.createdAt = Date.now();
-    // newUser.updatedAt = Date.now();
-    // newUser.version = 1;
-
     const user = this.usersRepository.create(dto);
     const newUser = this.usersRepository.save(user);
     const result = plainToInstance(User, newUser);
@@ -70,10 +61,7 @@ export class UserService {
     if (!user) throw new NotFoundException(`User with id ${id} does not exist`);
 
     await this.usersRepository.delete({ id });
-    // if (!isDeleted)
-    //   throw new InternalServerErrorException(
-    //     'Something went wrong. Try again later',
-    //   );
+
     return null;
   }
 }

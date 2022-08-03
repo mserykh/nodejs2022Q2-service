@@ -23,10 +23,20 @@ export class UserEntity {
   @VersionColumn({ default: 1 })
   version: number;
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    transformer: {
+      to: (value) => value,
+      from: (value) => value.getTime(),
+    },
+  })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({
+    transformer: {
+      to: (value) => value,
+      from: (value) => value.getTime(),
+    },
+  })
   updatedAt: Date;
 }
 

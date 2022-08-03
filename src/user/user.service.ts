@@ -40,8 +40,7 @@ export class UserService {
   }
 
   async editUser(id: string, dto: UpdatePasswordDto) {
-    const user = await this.getUserById(id);
-
+    const user = await this.usersRepository.findOneBy({ id });
     if (!user) throw new NotFoundException(`User with id ${id} does not exist`);
 
     if (user.password !== dto.oldPassword)

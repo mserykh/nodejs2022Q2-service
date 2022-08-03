@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
 
 import { DbModule } from './db/db.module';
 import { UserModule } from './user/user.module';
@@ -12,6 +14,19 @@ import { FavoritesModule } from './favorites/favorites.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        type: config.get<'aurora-data-api'>('TYPEORM_CONNECTION') as 'postgres',
+        username: config.get<string>('POSTGRES_USER'),
+        password: config.get<string>('POSTGRES_PASSWORD'),
+        database: config.get<string>('POSTGRES_DB'),
+        post: config.get<number>('POSTGRES_PORT'),
+        entities: [__dirname + 'dist/**/*.entity{.ts, .js}'],
+        synchronize: true
+      }),
     }),
     UserModule,
     AlbumModule,

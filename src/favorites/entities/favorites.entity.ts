@@ -3,6 +3,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -10,22 +11,22 @@ import { AlbumEntity } from '../../album/entities/album.entity';
 import { ArtistEntity } from '../../artist/entities/artist.entity';
 import { TrackEntity } from '../../track/entities/track.entity';
 
-@Entity('favourited')
+@Entity('favourite')
 export class FavoritesEntity {
   @PrimaryGeneratedColumn('uuid')
   @Exclude()
   id: string;
 
   @ManyToMany(() => ArtistEntity, { cascade: true })
-  @JoinColumn()
+  @JoinTable()
   artists: ArtistEntity[];
 
   @ManyToMany(() => AlbumEntity, { cascade: true })
-  @JoinColumn()
+  @JoinTable()
   albums: AlbumEntity[];
 
   @ManyToMany(() => TrackEntity, { cascade: true })
-  @JoinColumn()
+  @JoinTable()
   tracks: TrackEntity[];
 }
 

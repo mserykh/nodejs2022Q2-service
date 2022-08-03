@@ -1,75 +1,72 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
-import { DbService } from 'src/db/db.service';
-import { FavoriteItemType } from 'src/favorites/favorites.types';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateArtistDto, EditArtistDto } from './dto';
+import { ArtistEntity } from './entities/artist.entity';
 
 @Injectable()
 export class ArtistService {
-  constructor(private db: DbService) {}
+  constructor(
+    @InjectRepository(ArtistEntity)
+    private artistsRepository: Repository<ArtistEntity>,
+  ) {}
 
   async getArtists() {
-    const artists = await this.db.artists.findMany();
-    const result = [...artists];
+    const artists = await this.artistsRepository.find();
 
-    return result;
+    return artists;
   }
 
   async getArtistById(id: string) {
-    const artist = await this.db.artists.findUnique(id);
+    const artist = this.artistsRepository.findOneBy({ id });
     if (!artist)
       throw new NotFoundException(`Artist with id ${id} does not exist`);
 
-    const result = { ...artist };
-    return result;
+    // const result = { ...artist };
+    return artist;
   }
 
   async createArtist(dto: CreateArtistDto) {
-    const Artist = await this.db.artists.create(dto);
-    const result = { ...Artist };
+    const artist = this.artistsRepository.create(dto);
 
-    return result;
+    return this.artistsRepository.save(artist);
   }
 
   async editArtist(id: string, dto: EditArtistDto) {
-    const Artist = await this.db.artists.findUnique(id);
-    if (!Artist)
+    const artist = this.artistsRepository.findOneBy({ id });
+    if (!artist)
       throw new NotFoundException(`Artist with id ${id} does not exist`);
 
-    const updateArtist = await this.db.artists.update(id, dto);
-    const result = { ...updateArtist };
+    await this.artistsRepository.update(id, dto);
 
-    return result;
+    return this.getArtistById(id);
   }
 
-  deleteRef(id: string) {
-    this.db.albums.albums.forEach((item) => {
-      if (item.artistId === id) item.artistId = null;
-    });
+  // deleteRef(id: string) {
+  //   this.db.albums.albums.forEach((item) => {
+  //     if (item.artistId === id) item.artistId = null;
+  //   });
 
-    this.db.tracks.tracks.forEach((item) => {
-      if (item.artistId === id) item.artistId = null;
-    });
-  }
+  //   this.db.tracks.tracks.forEach((item) => {
+  //     if (item.artistId === id) item.artistId = null;
+  //   });
+  // }
 
   async deleteArtist(id: string) {
-    const Artist = await this.db.artists.findUnique(id);
-    if (!Artist)
+    const artist = this.artistsRepository.findOneBy({ id });
+    if (!artist)
       throw new NotFoundException(`Artist with id ${id} does not exist`);
 
-    const isFavorite = this.db.favorites.isFavorite(id);
-    if (isFavorite) await this.db.favorites.delete(FavoriteItemType.artist, id);
+    // const isFavorite = this.db.favorites.isFavorite(id);
+    // if (isFavorite) await this.db.favorites.delete(FavoriteItemType.artist, id);
 
-    this.deleteRef(id);
+    // this.deleteRef(id);
 
-    const isDeleted = await this.db.artists.delete(id);
-    if (!isDeleted)
-      throw new InternalServerErrorException(
-        'Something went wrong. Try again later',
-      );
+    await this.artistsRepository.delete({ id });
+    // if (!isDeleted)
+    //   throw new InternalServerErrorException(
+    //     'Something went wrong. Try again later',
+    //   );
 
     return null;
   }

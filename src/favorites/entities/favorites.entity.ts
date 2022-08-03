@@ -11,7 +11,7 @@ import { ArtistEntity } from '../../artist/entities/artist.entity';
 import { TrackEntity } from '../../track/entities/track.entity';
 
 @Entity('favourited')
-export class Favorites {
+export class FavoritesEntity {
   @PrimaryGeneratedColumn('uuid')
   @Exclude()
   id: string;

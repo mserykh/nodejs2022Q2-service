@@ -25,8 +25,8 @@ export class AlbumService {
 
   async getAlbumById(id: string) {
     const album = await this.albumsRepository.findOneBy({ id });
-    // if (!album)
-    //   throw new NotFoundException(`Album with id ${id} does not exist`);
+    if (!album)
+      throw new NotFoundException(`Album with id ${id} does not exist`);
 
     // const result = { ...album };
     return album;
@@ -39,9 +39,9 @@ export class AlbumService {
   }
 
   async editAlbum(id: string, dto: EditAlbumDto) {
-    // const album = await this.db.albums.findUnique(id);
-    // if (!album)
-    //   throw new NotFoundException(`Album with id ${id} does not exist`);
+    const album = await this.albumsRepository.findOneBy({ id });
+    if (!album)
+      throw new NotFoundException(`Album with id ${id} does not exist`);
     await this.albumsRepository.update(id, dto);
 
     return this.getAlbumById(id);
@@ -54,9 +54,9 @@ export class AlbumService {
   // }
 
   async deleteAlbum(id: string) {
-    // const album = await this.db.albums.findUnique(id);
-    // if (!album)
-    //   throw new NotFoundException(`Album with id ${id} does not exist`);
+    const album = await this.albumsRepository.findOneBy({ id });
+    if (!album)
+      throw new NotFoundException(`Album with id ${id} does not exist`);
 
     // const isFavorite = this.db.favorites.isFavorite(id);
     // if (isFavorite) await this.db.favorites.delete(FavoriteItemType.album, id);

@@ -20,7 +20,7 @@ export class TrackController {
   constructor(private trackService: TrackService) {}
 
   @Get()
-  async getTracks(): Promise<Track[]> {
+  async getTracks() {
     return await this.trackService.getTracks();
   }
 
@@ -32,7 +32,7 @@ export class TrackController {
   @Get(':id')
   async getTrackById(
     @Param('id', new ParseUUIDPipe()) id: string,
-  ): Promise<Track> {
+  ) {
     return await this.trackService.getTrackById(id);
   }
 
@@ -40,7 +40,7 @@ export class TrackController {
   async editTrack(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() dto: EditTrackDto,
-  ): Promise<Track> {
+  ) {
     return await this.trackService.editTrack(id, dto);
   }
 
@@ -48,7 +48,7 @@ export class TrackController {
   @Delete(':id')
   async deleteTrack(
     @Param('id', new ParseUUIDPipe()) id: string,
-  ): Promise<void> {
+  ) {
     return await this.trackService.deleteTrack(id);
   }
 }

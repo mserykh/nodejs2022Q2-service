@@ -3,61 +3,66 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { DbService } from 'src/db/db.service';
 import { FavoriteItemType } from 'src/favorites/favorites.types';
+import { Repository } from 'typeorm';
+import { threadId } from 'worker_threads';
 import { CreateTrackDto, EditTrackDto } from './dto';
+import { TrackEntity } from './entities/track.entity';
 
 @Injectable()
 export class TrackService {
-  constructor(private db: DbService) {}
+  constructor(
+    @InjectRepository(TrackEntity)
+    private tracksRepository: Repository<TrackEntity>,
+  ) {}
 
   async getTracks() {
-    const tracks = await this.db.tracks.findMany();
-    const result = [...tracks];
+    const tracks = await this.tracksRepository.find();
 
-    return result;
+    return tracks;
   }
 
   async getTrackById(id: string) {
-    const track = await this.db.tracks.findUnique(id);
+    const track = await this.tracksRepository.findOneBy({ id });
     if (!track)
       throw new NotFoundException(`Track with id ${id} does not exist`);
 
-    const result = { ...track };
-    return result;
+    // const result = { ...track };
+    return track;
   }
 
   async createTrack(dto: CreateTrackDto) {
-    const track = await this.db.tracks.create(dto);
-    const result = { ...track };
+    const track = this.tracksRepository.create(dto);
 
-    return result;
+    return await this.tracksRepository.save(track);
   }
 
   async editTrack(id: string, dto: EditTrackDto) {
-    const track = await this.db.tracks.findUnique(id);
+    const track = await this.tracksRepository.findOneBy({ id });
     if (!track)
       throw new NotFoundException(`Track with id ${id} does not exist`);
 
-    const updateTrack = await this.db.tracks.update(id, dto);
-    const result = { ...updateTrack };
+    await this.tracksRepository.update(id, dto);
 
-    return result;
+    return await this.getTrackById(id);
   }
 
   async deleteTrack(id: string) {
-    const track = await this.db.tracks.findUnique(id);
+    const track = await this.tracksRepository.findOneBy({ id });
     if (!track)
       throw new NotFoundException(`Track with id ${id} does not exist`);
 
-    const isFavorite = this.db.favorites.isFavorite(id);
-    if (isFavorite) await this.db.favorites.delete(FavoriteItemType.track, id);
+    // const isFavorite = this.tracksRepository.isFavorite(id);
+    // if (isFavorite) await this.tracksRepository.delete(FavoriteItemType.track, id);
 
-    const isDeleted = await this.db.tracks.delete(id);
-    if (!isDeleted)
-      throw new InternalServerErrorException(
-        'Something went wrong. Try again later',
-      );
+    // const isDeleted = await this.db.tracks.delete(id);
+    // if (!isDeleted)
+    //   throw new InternalServerErrorException(
+    //     'Something went wrong. Try again later',
+    //   );
+    await this.tracksRepository.delete({ id });
 
     return null;
   }

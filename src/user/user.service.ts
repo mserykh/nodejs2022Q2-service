@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToInstance } from 'class-transformer';
 
@@ -20,10 +24,11 @@ export class UserService {
 
   async getUserById(id: string) {
     const user = await this.usersRepository.findOneBy({ id });
-    // if (!user) throw new NotFoundException(`User with id ${id} does not exist`);
+    if (!user) throw new NotFoundException(`User with id ${id} does not exist`);
 
-    // const result = plainToInstance(User, user);
-    return user;
+    const result = plainToInstance(User, user);
+
+    return result;
   }
 
   async createUser(dto: CreateUserDto) {
@@ -44,8 +49,10 @@ export class UserService {
   }
 
   async editUser(id: string, dto: UpdatePasswordDto) {
-    // if (!user) throw new NotFoundException(`User with id ${id} does not exist`);
     const user = await this.getUserById(id);
+
+    if (!user) throw new NotFoundException(`User with id ${id} does not exist`);
+
     if (user.password !== dto.oldPassword)
       throw new ForbiddenException(
         'Provided password is not correct. Cannot update password',
@@ -59,8 +66,8 @@ export class UserService {
   }
 
   async deleteUser(id: string) {
-    // const user = await this.usersRepository.findUnique(id);
-    // if (!user) throw new NotFoundException(`User with id ${id} does not exist`);
+    const user = await this.usersRepository.findOneBy({ id });
+    if (!user) throw new NotFoundException(`User with id ${id} does not exist`);
 
     await this.usersRepository.delete({ id });
     // if (!isDeleted)

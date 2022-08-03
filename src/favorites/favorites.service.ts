@@ -39,7 +39,8 @@ export class FavoritesService {
   async addAlbumToFavorites(id: string) {
     const album = await this.albumsRepository.findOneBy({ id });
 
-    if (!album) throw new UnprocessableEntityException(`Album with ${id} does not exist`);
+    if (!album)
+      throw new UnprocessableEntityException(`Album with ${id} does not exist`);
 
     const isFavorite = await this.favoritesRepository
       .createQueryBuilder('favorites')
@@ -56,7 +57,7 @@ export class FavoritesService {
     favorites.albums.push(album);
     this.favoritesRepository.save(favorites);
 
-    return { message: 'Added successfully' };
+    return album;
   }
 
   async deleteAlbumFromFavorites(id: string) {
@@ -87,7 +88,9 @@ export class FavoritesService {
     const artist = await this.artistsRepository.findOneBy({ id });
 
     if (!artist)
-      throw new UnprocessableEntityException(`Artist with ${id} does not exist`);
+      throw new UnprocessableEntityException(
+        `Artist with ${id} does not exist`,
+      );
 
     const isFavorite = await this.favoritesRepository
       .createQueryBuilder('favorites')
@@ -104,7 +107,7 @@ export class FavoritesService {
     favorites.artists.push(artist);
     this.favoritesRepository.save(favorites);
 
-    return { message: 'Added successfully' };
+    return artist;
   }
 
   async deleteArtistFromFavorites(id: string) {
@@ -139,7 +142,8 @@ export class FavoritesService {
   async addTrackToFavorites(id: string) {
     const track = await this.tracksRepository.findOneBy({ id });
 
-    if (!track) throw new UnprocessableEntityException(`Track with ${id} does not exist`);
+    if (!track)
+      throw new UnprocessableEntityException(`Track with ${id} does not exist`);
 
     const isFavorite = await this.favoritesRepository
       .createQueryBuilder('favorites')
@@ -156,7 +160,7 @@ export class FavoritesService {
     favorites.tracks.push(track);
     this.favoritesRepository.save(favorites);
 
-    return { message: 'Added successfully' };
+    return track;
   }
 
   async deleteTrackFromFavorites(id: string) {

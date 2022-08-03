@@ -159,7 +159,7 @@ export class FavoritesService {
     return { message: 'Added successfully' };
   }
 
-  async deleteTrackFromFavorites (id: string) {
+  async deleteTrackFromFavorites(id: string) {
     const track = await this.tracksRepository.findOneBy({ id });
 
     if (!track)

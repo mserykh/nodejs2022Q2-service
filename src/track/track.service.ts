@@ -1,13 +1,6 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DbService } from 'src/db/db.service';
-import { FavoriteItemType } from 'src/favorites/favorites.types';
 import { Repository } from 'typeorm';
-import { threadId } from 'worker_threads';
 import { CreateTrackDto, EditTrackDto } from './dto';
 import { TrackEntity } from './entities/track.entity';
 
@@ -29,7 +22,6 @@ export class TrackService {
     if (!track)
       throw new NotFoundException(`Track with id ${id} does not exist`);
 
-    // const result = { ...track };
     return track;
   }
 

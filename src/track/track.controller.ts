@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { StatusCodes } from 'http-status-codes';
 
-import { Track } from 'src/db/db.schema';
 import { CreateTrackDto, EditTrackDto } from './dto';
 import { TrackService } from './track.service';
 
@@ -30,9 +29,7 @@ export class TrackController {
   }
 
   @Get(':id')
-  async getTrackById(
-    @Param('id', new ParseUUIDPipe()) id: string,
-  ) {
+  async getTrackById(@Param('id', new ParseUUIDPipe()) id: string) {
     return await this.trackService.getTrackById(id);
   }
 
@@ -46,9 +43,7 @@ export class TrackController {
 
   @HttpCode(StatusCodes.NO_CONTENT)
   @Delete(':id')
-  async deleteTrack(
-    @Param('id', new ParseUUIDPipe()) id: string,
-  ) {
+  async deleteTrack(@Param('id', new ParseUUIDPipe()) id: string) {
     return await this.trackService.deleteTrack(id);
   }
 }

@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { StatusCodes } from 'http-status-codes';
 
-import { Album } from 'src/db/db.schema';
 import { CreateAlbumDto, EditAlbumDto } from './dto';
 import { AlbumService } from './album.service';
 

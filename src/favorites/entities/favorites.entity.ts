@@ -16,15 +16,15 @@ export class Favorites {
   @Exclude()
   id: string;
 
-  @ManyToMany(() => ArtistEntity)
+  @ManyToMany(() => ArtistEntity, { cascade: true })
   @JoinColumn()
   artists: ArtistEntity[];
 
-  @ManyToMany(() => AlbumEntity)
+  @ManyToMany(() => AlbumEntity, { cascade: true })
   @JoinColumn()
   albums: AlbumEntity[];
 
-  @ManyToMany(() => TrackEntity)
+  @ManyToMany(() => TrackEntity, { cascade: true })
   @JoinColumn()
   tracks: TrackEntity[];
 }

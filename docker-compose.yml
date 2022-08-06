@@ -13,6 +13,8 @@ services:
     volumes:
       - .:/usr/app
       - /usr/app/node_modules
+    networks:
+      - postgres
     
   postgres:
     container_name: postgres

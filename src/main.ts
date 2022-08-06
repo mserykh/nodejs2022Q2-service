@@ -20,7 +20,7 @@ async function bootstrap() {
   const document = parse(swaggerSpec);
   SwaggerModule.setup('doc', app, document);
 
-  const PORT = configService.get('PORT');
+  const PORT = configService.get<number>('PORT');
 
   app.useGlobalPipes(
     new ValidationPipe({

@@ -9,7 +9,11 @@ import { Repository } from 'typeorm';
 import { AlbumEntity } from 'src/album/entities/album.entity';
 import { ArtistEntity } from 'src/artist/entities/artist.entity';
 import { TrackEntity } from 'src/track/entities/track.entity';
-import { FavoritesEntity } from './entities/favorites.entity';
+import {
+  FavoritesEntity,
+  FavoritesRepsonse,
+} from './entities/favorites.entity';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class FavoritesService {
@@ -32,8 +36,9 @@ export class FavoritesService {
         tracks: true,
       },
     });
+    const result = plainToInstance(FavoritesRepsonse, favorites);
 
-    return favorites[0] || { albums: [], artists: [], tracks: [] };
+    return result[0] || { albums: [], artists: [], tracks: [] };
   }
 
   async addAlbumToFavorites(id: string) {
@@ -79,7 +84,7 @@ export class FavoritesService {
 
     const favorites = await this.getFavorites();
     favorites.albums.filter((album) => album.id !== id);
-    this.favoritesRepository.save(favorites);
+    this.favoritesRepository.save([favorites]);
 
     return null;
   }
@@ -118,7 +123,7 @@ export class FavoritesService {
         `Artist with ${id} does not exist`,
       );
 
-    const isFavorite = this.favoritesRepository.findOne({
+    const isFavorite = await this.favoritesRepository.findOne({
       where: {
         id,
       },
@@ -134,7 +139,7 @@ export class FavoritesService {
 
     const favorites = await this.getFavorites();
     favorites.artists.filter((artist) => artist.id !== id);
-    this.favoritesRepository.save(favorites);
+    this.favoritesRepository.save([favorites]);
 
     return null;
   }
@@ -158,9 +163,9 @@ export class FavoritesService {
 
     const favorites = await this.getFavorites();
     favorites.tracks.push(track);
-    this.favoritesRepository.save(favorites);
-
-    return track;
+    this.favoritesRepository.save({...favorites});
+        console.log(this.favoritesRepository)
+    return favorites;
   }
 
   async deleteTrackFromFavorites(id: string) {
@@ -169,7 +174,7 @@ export class FavoritesService {
     if (!track)
       throw new UnprocessableEntityException(`Track with ${id} does not exist`);
 
-    const isFavorite = this.favoritesRepository.findOne({
+    const isFavorite = await this.favoritesRepository.findOne({
       where: {
         id,
       },
@@ -185,7 +190,7 @@ export class FavoritesService {
 
     const favorites = await this.getFavorites();
     favorites.tracks.filter((track) => track.id !== id);
-    this.favoritesRepository.save(favorites);
+    this.favoritesRepository.save([favorites]);
 
     return null;
   }

@@ -26,6 +26,9 @@ export class FavoritesEntity {
 import { Album, Artist, Track } from 'src/db/db.schema';
 
 export class FavoritesRepsonse {
+  @Exclude()
+  id: string;
+  
   artists: Artist[];
   albums: Album[];
   tracks: Track[];

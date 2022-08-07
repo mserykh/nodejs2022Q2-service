@@ -7,6 +7,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 @Entity('album')
 export class AlbumEntity {
@@ -21,7 +22,8 @@ export class AlbumEntity {
 
   @Column({ nullable: true })
   artistId: string;
-
+  
+  @Exclude()
   @ManyToOne(() => ArtistEntity, (artist) => artist.albums, {
     nullable: true,
     onDelete: 'SET NULL',

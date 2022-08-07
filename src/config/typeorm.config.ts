@@ -3,12 +3,11 @@ import {
   TypeOrmModuleAsyncOptions,
   TypeOrmModuleOptions,
 } from '@nestjs/typeorm';
-import { AlbumEntity } from 'src/album/entities/album.entity';
-import { ArtistEntity } from 'src/artist/entities/artist.entity';
-import { FavoritesEntity } from 'src/favorites/entities/favorites.entity';
-import { TrackEntity } from 'src/track/entities/track.entity';
-import { UserEntity } from 'src/user/entities/user.entity';
-import { DataSource, DataSourceOptions } from 'typeorm/data-source';
+import { AlbumEntity } from '../album/entities/album.entity';
+import { ArtistEntity } from '../artist/entities/artist.entity';
+import { FavoritesEntity } from '../favorites/entities/favorites.entity';
+import { TrackEntity } from '../track/entities/track.entity';
+import { UserEntity } from '../user/entities/user.entity';
 
 export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
   inject: [ConfigService],
@@ -26,13 +25,11 @@ export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
         TrackEntity,
         FavoritesEntity,
       ],
-     // entities: [__dirname + './../**/*.entity{.ts,.js}'],
-      migrations: [__dirname + '/../database/migrations/*{.ts,.js}'],
-      extra: {
-        charset: 'utf8mb4_unicode_ci',
-      },
-      synchronize: false,
-      logging: true
+      migrations: ['/dist/migrations/*{.ts,.js}'],
+      synchronize: true,
+      logging: true,
+      migrationsTransactionMode: 'each',
+      migrationsRun: true,
     };
   },
 };

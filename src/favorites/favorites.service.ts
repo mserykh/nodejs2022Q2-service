@@ -29,16 +29,17 @@ export class FavoritesService {
   ) {}
 
   async getFavorites() {
-    const favorites = await this.favoritesRepository.find({
+    const favorites = await this.favoritesRepository.findOne({
       relations: {
         albums: true,
         artists: true,
         tracks: true,
       },
+      where: { },
     });
     const result = plainToInstance(FavoritesRepsonse, favorites);
 
-    return result[0] || { albums: [], artists: [], tracks: [] };
+    return result || { albums: [], artists: [], tracks: [] };
   }
 
   async addAlbumToFavorites(id: string) {
@@ -47,16 +48,17 @@ export class FavoritesService {
     if (!album)
       throw new UnprocessableEntityException(`Album with ${id} does not exist`);
 
-    const isFavorite = await this.favoritesRepository
-      .createQueryBuilder('favorites')
-      .leftJoinAndSelect('favorites.albums', 'albums')
-      .where('albums.id = :id', { id })
-      .getOne();
+    // const isFavorite = await this.favoritesRepository
+    //   .createQueryBuilder('favorites')
+    //   .leftJoinAndSelect('favorites.albums', 'albums')
+    //   .where('albums.id = :id', { id })
+    //   .getOne();
 
-    if (isFavorite)
-      throw new UnprocessableEntityException(
-        `Favorite album with id ${id} already added`,
-      );
+    
+    // if (isFavorite)
+    //   throw new UnprocessableEntityException(
+    //     `Favorite album with id ${id} already added`,
+    //   );
 
     const favorites = await this.getFavorites();
     favorites.albums.push(album);
@@ -71,16 +73,16 @@ export class FavoritesService {
     if (!album)
       throw new UnprocessableEntityException(`Album with ${id} does not exist`);
 
-    const isFavorite = await this.favoritesRepository
-      .createQueryBuilder('favorites')
-      .leftJoinAndSelect('favorites.albums', 'albums')
-      .where('albums.id = :id', { id })
-      .getOne();
+    // const isFavorite = await this.favoritesRepository
+    //   .createQueryBuilder('favorites')
+    //   .leftJoinAndSelect('favorites.albums', 'albums')
+    //   .where('albums.id = :id', { id })
+    //   .getOne();
 
-    if (!isFavorite)
-      throw new UnprocessableEntityException(
-        `Favorite artist with id ${id} was not in Favorites. Unable to delete`,
-      );
+    // if (!isFavorite)
+    //   throw new UnprocessableEntityException(
+    //     `Favorite artist with id ${id} was not in Favorites. Unable to delete`,
+    //   );
 
     const favorites = await this.getFavorites();
     favorites.albums.filter((album) => album.id !== id);
@@ -97,16 +99,16 @@ export class FavoritesService {
         `Artist with ${id} does not exist`,
       );
 
-    const isFavorite = await this.favoritesRepository
-      .createQueryBuilder('favorites')
-      .leftJoinAndSelect('favorites.artists', 'artists')
-      .where('artists.id = :id', { id })
-      .getOne();
+    // const isFavorite = await this.favoritesRepository
+    //   .createQueryBuilder('favorites')
+    //   .leftJoinAndSelect('favorites.artists', 'artists')
+    //   .where('artists.id = :id', { id })
+    //   .getOne();
 
-    if (isFavorite)
-      throw new UnprocessableEntityException(
-        `Favorite artist with id ${id} already added`,
-      );
+    // if (isFavorite)
+    //   throw new UnprocessableEntityException(
+    //     `Favorite artist with id ${id} already added`,
+    //   );
 
     const favorites = await this.getFavorites();
     favorites.artists.push(artist);
@@ -123,19 +125,19 @@ export class FavoritesService {
         `Artist with ${id} does not exist`,
       );
 
-    const isFavorite = await this.favoritesRepository.findOne({
-      where: {
-        id,
-      },
-      relations: {
-        artists: true,
-      },
-    });
+    // const isFavorite = await this.favoritesRepository.findOne({
+    //   where: {
+    //     id,
+    //   },
+    //   relations: {
+    //     artists: true,
+    //   },
+    // });
 
-    if (!isFavorite)
-      throw new UnprocessableEntityException(
-        `Favorite artist with id ${id} was not in Favorites. Unable to delete`,
-      );
+    // if (!isFavorite)
+    //   throw new UnprocessableEntityException(
+    //     `Favorite artist with id ${id} was not in Favorites. Unable to delete`,
+    //   );
 
     const favorites = await this.getFavorites();
     favorites.artists.filter((artist) => artist.id !== id);
@@ -150,21 +152,21 @@ export class FavoritesService {
     if (!track)
       throw new UnprocessableEntityException(`Track with ${id} does not exist`);
 
-    const isFavorite = await this.favoritesRepository
-      .createQueryBuilder('favorites')
-      .leftJoinAndSelect('favorites.tracks', 'tracks')
-      .where('tracks.id = :id', { id })
-      .getOne();
+    // const isFavorite = await this.favoritesRepository
+    //   .createQueryBuilder('favorites')
+    //   .leftJoinAndSelect('favorites.tracks', 'tracks')
+    //   .where('tracks.id = :id', { id })
+    //   .getOne();
 
-    if (isFavorite)
-      throw new UnprocessableEntityException(
-        `Favorite track with id ${id} already added`,
-      );
+    // if (isFavorite)
+    //   throw new UnprocessableEntityException(
+    //     `Favorite track with id ${id} already added`,
+    //   );
 
     const favorites = await this.getFavorites();
     favorites.tracks.push(track);
-    this.favoritesRepository.save({...favorites});
-        console.log(this.favoritesRepository)
+    this.favoritesRepository.save(favorites);
+
     return favorites;
   }
 
@@ -174,19 +176,19 @@ export class FavoritesService {
     if (!track)
       throw new UnprocessableEntityException(`Track with ${id} does not exist`);
 
-    const isFavorite = await this.favoritesRepository.findOne({
-      where: {
-        id,
-      },
-      relations: {
-        tracks: true,
-      },
-    });
+    // const isFavorite = await this.favoritesRepository.findOne({
+    //   where: {
+    //     id,
+    //   },
+    //   relations: {
+    //     tracks: true,
+    //   },
+    // });
 
-    if (!isFavorite)
-      throw new UnprocessableEntityException(
-        `Favorite track with id ${id} was not in Favorites. Unable to delete`,
-      );
+    // if (!isFavorite)
+    //   throw new UnprocessableEntityException(
+    //     `Favorite track with id ${id} was not in Favorites. Unable to delete`,
+    //   );
 
     const favorites = await this.getFavorites();
     favorites.tracks.filter((track) => track.id !== id);

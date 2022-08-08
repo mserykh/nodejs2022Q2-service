@@ -1,14 +1,9 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import bcrypt from 'bcrypt';
+import { ForbiddenException, Injectable } from '@nestjs/common';
+import { genSalt, hash, compare }  from 'bcrypt';
+import 'dotenv/config';
 
 import { CreateUserDto } from 'src/user/dto';
-import { User, UserEntity } from 'src/user/entities/user.entity';
+import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
 import { Tokens } from './types';
 import { JwtService } from '@nestjs/jwt';
@@ -19,16 +14,14 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
-    @InjectRepository(UserEntity)
-    private userRepository: Repository<UserEntity>,
   ) {}
 
   async signup(dto: CreateUserDto): Promise<User | void> {
-    const hash = await this.hashData(dto.password);
+    const hashPassword = await this.hashData(dto.password);
 
     const user = await this.userService.createUser({
       login: dto.login,
-      password: hash,
+      password: hashPassword,
     });
 
     return user;
@@ -46,10 +39,10 @@ export class AuthService {
 
   async hashData(data: string) {
     const saltRounds = Number(process.env.CRYPT_SALT);
-    const salt = await bcrypt.genSalt(saltRounds);
-    const hash = await bcrypt.hash(data, salt);
+    const salt = await genSalt(saltRounds);
+    const hashPassword = await hash(data, salt);
 
-    return hash;
+    return hashPassword;
   }
 
   async getTokens(userId: string, login: string): Promise<Tokens> {
@@ -89,10 +82,10 @@ export class AuthService {
     if (!user)
       throw new ForbiddenException('Incorrect credentials. No such user');
 
-    const passwordMatches = await bcrypt.compare(password, user.password);
+    const passwordMatches = await compare(password, user.password);
     if (!passwordMatches)
       throw new ForbiddenException(
-        'Incorrect credentials. Please check hte password',
+        'Incorrect credentials. Please check the password',
       );
 
     return user;

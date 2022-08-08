@@ -31,6 +31,12 @@ export class UserService {
     return result;
   }
 
+  async getUserByLogin(login: string) {
+    const user = await this.usersRepository.findOneBy({ login });
+
+    return user;
+  }
+
   async createUser(dto: CreateUserDto) {
     const user = this.usersRepository.create(dto);
     const newUser = this.usersRepository.save(user);

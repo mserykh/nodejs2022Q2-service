@@ -1,20 +1,25 @@
 import { Body, Controller, HttpCode, Post, Req } from '@nestjs/common';
 import { CreateUserDto } from 'src/user/dto';
+import { User } from 'src/user/entities/user.entity';
 import { AuthService } from './auth.service';
+import { Public } from './decorators/public.decorator';
+import { Tokens } from './types';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @Public()
   @Post('signup')
   @HttpCode(201)
-  async signup(@Body() dto: CreateUserDto ) {
-    return await this.authService.signup(dto);
+  signup(@Body() dto: CreateUserDto): Promise<User | void> {
+    return this.authService.signup(dto);
   }
 
+  @Public()
   @Post('login')
-  login() {
-    return this.authService.login();
+  login(@Body() dto: CreateUserDto): Promise<Tokens> {
+    return this.authService.login(dto);
   }
 
   @Post('refresh')

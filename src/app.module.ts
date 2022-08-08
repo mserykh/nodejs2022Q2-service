@@ -9,6 +9,7 @@ import { AlbumModule } from './album/album.module';
 import { TrackModule } from './track/track.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { DataSource } from 'typeorm';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { DataSource } from 'typeorm';
     ArtistModule,
     TrackModule,
     FavoritesModule,
+    AuthModule,
   ],
 })
 export class AppModule {

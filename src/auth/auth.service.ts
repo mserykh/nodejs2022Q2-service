@@ -12,15 +12,15 @@ export class AuthService {
   constructor(
     private userService: UserService,
     @InjectRepository(UserEntity)
-    private userReposiroty: Repository<UserEntity>,
+    private userRepository: Repository<UserEntity>,
   ) {}
 
   async signup(dto: CreateUserDto) {
     const saltRounds = Number(process.env.CRYPT_SALT);
-
     const salt = await bcrypt.genSalt(saltRounds);
     const hash = await bcrypt.hash(dto.password, salt);
-    const user = this.userReposiroty.create({
+    
+    const user = this.userService.createUser({
       login: dto.login,
       password: hash,
     });

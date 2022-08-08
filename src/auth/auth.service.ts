@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { genSalt, hash, compare }  from 'bcrypt';
+import { genSalt, hash, compare } from 'bcrypt';
 import 'dotenv/config';
 
 import { CreateUserDto } from 'src/user/dto';
